@@ -20,6 +20,7 @@
     {% # Load and preload the critical CSS %}
     {% comment %} {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }} {% endcomment %}
     {{ 'application.css' | asset_url | stylesheet_tag }}
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
