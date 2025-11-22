@@ -1,21 +1,27 @@
-{% comment %}
-  This section is used in the article template to render the article page, which
-  displays the full content of the blog post and can optionally include a
-  comments section for customers (not shown in this example).
+{% for block in section.blocks %}
+  {% case block.type %}
+    {% when 'article_title' %}
+      <h1>{{ article.title }}</h1>
+    {% when 'article_author' %}
+      {% if section.settings.enable_author %}
+        <small class="font-bold">{{article.author}}</small> 
+      {% endif %}
+    {% when 'article_published_date' %}
+      {% if section.settings.enable_date %}
+        <time datetime="{{ article.published_at |  date: '%Y-%m-%d' }}">{{ article.published_at |  date: '%Y-%m-%d' }}</time>
+      {% endif %}
+    {% when 'featured_image' %}
+      {% if article.image %}
+        {{ article.image | image_url: width: 1000 | image_tag }}
+      {% endif %}
+    {% when 'article_content' %}
+      {{ article.content }}
+    
+    {% else %}
+      
+  {% endcase %}
+{% endfor %}
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/article
-{% endcomment %}
-
-{% if article.image %}
-  {{ article.image | image_url: width: 1000 | image_tag }}
-{% endif %}
-
-<h1>{{ article.title }}</h1>
-
-{% assign date = article.published_at | time_tag: format: 'date' %}
-<p>{{ 'blog.article_metadata_html' | t: date: date, author: article.author }}</p>
-
-{{ article.content }}
 
 {% if blog.comments_enabled? %}
   <h2>{{ 'blog.article_comments' | t }}</h2>
@@ -63,6 +69,46 @@
 {% schema %}
 {
   "name": "t:general.article",
-  "settings": []
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_author",
+      "label": "Display Author Name",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_date",
+      "label": "Display Published Date",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "article_title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "article_author",
+      "name": "Author",
+      "limit": 1
+    },
+    {
+      "type": "article_published_date",
+      "name": "Published Date",
+      "limit": 1
+    },
+    {
+      "type": "featured_image",
+      "name": "Thumbnail",
+      "limit": 1
+    },
+    {
+      "type": "article_content",
+      "name": "Content",
+      "limit": 1
+    }
+  ]
 }
 {% endschema %}
