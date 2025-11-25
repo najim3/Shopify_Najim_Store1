@@ -5,31 +5,44 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/blog
 {% endcomment %}
 
-<h1>{{ blog.title }}</h1>
-
-{% paginate blog.articles by 5 %}
+{% paginate blog.articles by section.settings.number_of_blog_posts %}
   {% for article in blog.articles %}
     <div>
       {% if article.image %}
-        {{ article.image | image_url: width: 1000 | image_tag }}
+        <div class="flex items-center justify-center">
+          {{ article.image | image_url: width: 500, height: 300 | image_tag: class: 'object-cover' }}
+        </div>
+      {% else %}
+        <div class="flex items-center justify-center">
+          {{ 'image' | placeholder_svg_tag: width: 100, height: 100 }}
+        </div>
       {% endif %}
       <h2>
         {{ article.title | link_to: article.url }}
       </h2>
+      {% if article.excerpt.size > 0 %}
+      {% else %}
+        <p>{{ article.content | strip_html | truncatewords: 15 }}</p>
+      {% endif %}
       {% assign date = article.published_at | time_tag: format: 'date' %}
       <p>{{ 'blog.article_metadata_html' | t: date: date, author: article.author }}</p>
-      <p>{{ article.excerpt }}</p>
     </div>
   {% endfor %}
-
-  {%- if paginate.pages > 1 -%}
-    {{- paginate | default_pagination -}}
-  {%- endif -%}
 {% endpaginate %}
 
 {% schema %}
 {
   "name": "t:general.blog",
-  "settings": []
+  "settings": [
+    {
+      "type": "range",
+      "id": "number_of_blog_posts",
+      "label": "Blog posts per page",
+      "default": 3,
+      "min": 1,
+      "max": 6,
+      "step": 1
+    }
+  ]
 }
 {% endschema %}
