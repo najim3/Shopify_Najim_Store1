@@ -10,8 +10,10 @@
 {
   "sections": {
     "main": {
-      "type": "hello-world",
-      "settings": {}
+      "type": "featured-collection",
+      "settings": {
+        "featured_collection": "all"
+      }
     }
   },
   "order": [
