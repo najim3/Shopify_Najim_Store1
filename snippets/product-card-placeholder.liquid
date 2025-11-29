@@ -1,0 +1,11 @@
+<div class="w-full py-6 px-3">
+  <div class="border bg-white shadow-lg rounded-lg overflow-hidden">
+    {{ 'product-1' | placeholder_svg_tag: width: 600, height: 600, class: 'w-full object-cover h-80 bg-gray-200' }}
+
+    <div class="flex flex-col p-4">
+      <span class="text-sm text-gray-400">Vendor</span>
+      <span class="uppercase text-lg font-medium text-gray-900 y-2">Placeholder title</span>
+      <span class="text-base text-gray-600">{{ '8888' | money }}</span>
+    </div>
+  </div>
+</div>
