@@ -1,14 +1,39 @@
-{% paginate collection.products by 6 %}
-  {% for product in collection.products %}
-    {% if product.featured_image %}
-      {{ product.featured_image | image_url: width: 200, height: 200 | image_tag: class: 'w-50 h-50 object-cover' }}
-    {% endif %}
-    <span>{{ product.vendor }}</span>
-    <a href="{{ product.url }}">{{ product.title }}</a>
-    <span>{{ product.price | money }}</span>
-  {% else %}
-    <p>No products found in this collection.</p>
-  {% endfor %}
+<div class="px-4 py-8">
+  {% paginate collection.products by 6 %}
+    <h1 class="text-3xl text-center">{{ collection.title }}</h1>
 
-  {% render 'pagination', pagination: paginate %}
-{% endpaginate %}
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for product in collection.products %}
+          <div class="w-full py-6 px-3">
+            <div class="border bg-white shadow-lg rounded-lg overflow-hidden">
+              <a href="{{ product.url }}">
+                {% if product.featured_image %}
+                  <div class="overflow-hidden">
+                    {{
+                      product.featured_image
+                      | image_url: width: 80, height: 80
+                      | image_tag: class: 'w-full h-full object-cover'
+                    }}
+                  </div>
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: width: 80, height: 80, class: 'object-cover bg-gray-100' }}
+                {% endif %}
+              </a>
+              <div class="flex flex-col p-4">
+                <span class="text-sm">{{ product.vendor }}</span>
+                <a class="text-gray-700 uppercase font-medium" href="{{ product.url }}">{{ product.title }}</a>
+                <span class="text-gray-500">{{ product.price | money }}</span>
+              </div>
+            </div>
+          </div>
+
+        {% else %}
+          <p>No products found in this collection.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% render 'pagination', pagination: paginate %}
+  {% endpaginate %}
+</div>
