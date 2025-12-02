@@ -234,11 +234,17 @@
   .static {
     position: static;
   }
+  .sticky {
+    position: sticky;
+  }
   .inset-x-0 {
     inset-inline: calc(var(--spacing) * 0);
   }
   .top-0 {
     top: calc(var(--spacing) * 0);
+  }
+  .top-5 {
+    top: calc(var(--spacing) * 5);
   }
   .z-10 {
     z-index: 10;

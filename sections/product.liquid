@@ -3,6 +3,13 @@
   href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
 >
 
+<style>
+  .product--information {
+    height: fit-content;
+    overflow-y: auto;
+  }
+</style>
+
 <script defer src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
 
 <div class="max-w-6xl mx-auto my-8">
@@ -33,8 +40,10 @@
         </div>
       </div>
     </div>
-    <div class="product--information">
+    <div class="product--information sticky top-5 p-2 ">
       {% form 'product', product %}
+        {% comment %} Following line is used to select the first available variant and for Cart {% endcomment %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
         <div class="my-3">
           <span class="text-xs.text-gray-500">{{ product.vendor }}</span>
         </div>
