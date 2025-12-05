@@ -72,28 +72,29 @@
                 {% unless product.has_only_default_variant %}
                   <variant-selector data-url="{{ product.url }}" data-section-id="{{ section.id }}">
                     {% for option in product.options_with_values %}
-                      <div class="flex items-center gap-12">
-                        <label for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }} :</label>
-                        <div class="my-2">
-                          <select
-                            name="options[{{ option.name | escape }}]"
-                            id="Option-{{ section.id }}-{{ forloop.index0 }}"
-                            class="w-full border border-gray-300 rounded px-2 py-1"
-                          >
-                            {% for value in option.values %}
-                              <option
-                                value="{{ value | escape }}"
-                                {% if value == option.selected_value %}
-                                  selected="selected"
-                                {% endif %}
-                              >
-                                {{ value }}
-                              </option>
-                            {% endfor %}
-                          </select>
-                        </div>
+                      <label for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }} :</label>
+                      <div class="my-2">
+                        <select
+                          name="options[{{ option.name | escape }}]"
+                          id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                          class="w-full border border-gray-300 rounded px-2 py-1"
+                        >
+                          {% for value in option.values %}
+                            <option
+                              value="{{ value | escape }}"
+                              {% if value == option.selected_value %}
+                                selected="selected"
+                              {% endif %}
+                            >
+                              {{ value }}
+                            </option>
+                          {% endfor %}
+                        </select>
                       </div>
                     {% endfor %}
+                    <script type="application/json">
+                      {{ product.variants | json }}
+                    </script>
                   </variant-selector>
                 {% endunless %}
               </div>
@@ -148,11 +149,30 @@
 
     onVariantChange() {
       this.getSelectedOptions();
+      this.getSelectedVariant();
     }
 
     getSelectedOptions() {
       this.options = Array.from(this.querySelectorAll('select'), (select) => select.value);
       console.log(this.options);
+    }
+
+    getVariantJson() {
+      this.variantData = this.variantData || JSON.parse(this.querySelector('[type="application/json"]').textContent);
+      return this.variantData;
+    }
+
+    getSelectedVariant() {
+      this.currentVariant = this.getVariantJson().find((variant) => {
+        const findings = !variant.options
+          .map((option, index) => {
+            return this.options[index] === option;
+          })
+          .includes(false);
+
+        if (findings) return variant;
+      });
+      console.log(this.currentVariant);
     }
   }
 
